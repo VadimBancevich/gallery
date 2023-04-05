@@ -1,3 +1,4 @@
 import Home from 'pages/home';
+import GalleryHome from './gallery-home';
 
-export default Home;
+export default GalleryHome;

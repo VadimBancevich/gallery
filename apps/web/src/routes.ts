@@ -10,8 +10,14 @@ export enum LayoutType {
 
 export enum RoutePath {
   // Private paths
-  Home = '/',
   Profile = '/profile',
+  UploadPicture = '/upload-picture',
+  Picture = '/picture',
+  PictureUpdate = '/update-picture',
+  MyCollection = '/my-collection',
+
+  //Public paths
+  Home = '/',
 
   // Auth paths
   SignIn = '/sign-in',
@@ -32,12 +38,30 @@ type RoutesConfiguration = {
 
 export const routesConfiguration: RoutesConfiguration = {
   // Private routes
-  [RoutePath.Home]: {
+  [RoutePath.Profile]: {
     scope: ScopeType.PRIVATE,
     layout: LayoutType.MAIN,
   },
-  [RoutePath.Profile]: {
+  [RoutePath.UploadPicture]: {
     scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN
+  },
+  [RoutePath.Picture]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN
+  },
+  [RoutePath.PictureUpdate]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN
+  },
+  [RoutePath.MyCollection]: {
+    scope: ScopeType.PRIVATE,
+    layout: LayoutType.MAIN
+  },
+
+  //Public routes
+  [RoutePath.Home]: {
+    scope: ScopeType.PUBLIC,
     layout: LayoutType.MAIN,
   },
 

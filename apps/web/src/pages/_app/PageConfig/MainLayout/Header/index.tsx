@@ -3,6 +3,8 @@ import { RoutePath } from 'routes';
 import {
   Header as LayoutHeader,
   Container,
+  Stack,
+  Group,
 } from '@mantine/core';
 import { Link } from 'components';
 import { LogoImage } from 'public/images';
@@ -15,7 +17,17 @@ import ShadowLoginBanner from './components/ShadowLoginBanner';
 const Header: FC = () => {
   const { data: account } = accountApi.useGet();
 
-  if (!account) return null;
+  // if (!account) return null;
+
+  if (!account) {
+    return (
+      <LayoutHeader height="72px">
+        <Stack>
+          <Link href={RoutePath.SignIn}>Sign in</Link>
+        </Stack>
+      </LayoutHeader>
+    )
+  }
 
   return (
     <LayoutHeader height="72px">
@@ -36,7 +48,10 @@ const Header: FC = () => {
         <Link type="router" href={RoutePath.Home}>
           <LogoImage />
         </Link>
-        <UserMenu />
+        <Group>
+          <Link type='router' href={RoutePath.MyCollection}>My Collection</Link>
+          <UserMenu />
+        </Group>
       </Container>
     </LayoutHeader>
   );

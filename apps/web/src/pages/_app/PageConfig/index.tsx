@@ -50,10 +50,10 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
     return null;
   }
 
-  if (scope === ScopeType.PUBLIC && account) {
-    push(RoutePath.Home);
-    return null;
-  }
+  // if (scope === ScopeType.PUBLIC && account) {
+  //   push(RoutePath.Home);
+  //   return null;
+  // }
 
   return (
     <Scope>
