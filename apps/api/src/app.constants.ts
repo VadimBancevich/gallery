@@ -1,6 +1,8 @@
 const DATABASE_DOCUMENTS = {
   USERS: 'users',
   TOKENS: 'tokens',
+  PICTURES: 'pictures',
+  PICTURE_LIKES: 'picture_likes'
 };
 
 const COOKIES = {

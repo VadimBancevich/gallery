@@ -1,5 +1,11 @@
 {
   "eslint.workingDirectories": [
     { "mode": "auto" }
+  ],
+  "cSpell.words": [
+    "autosize",
+    "mantine",
+    "middlewares",
+    "paralect"
   ]
 }

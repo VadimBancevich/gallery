@@ -101,6 +101,15 @@ const SignIn: NextPage = () => {
               Sign up
             </Link>
           </Group>
+          <Group position='center'>
+            <Link
+              type="router"
+              href={RoutePath.Home}
+              underline={false}
+            >
+              Home
+            </Link>
+          </Group>
         </Stack>
       </Stack>
     </>

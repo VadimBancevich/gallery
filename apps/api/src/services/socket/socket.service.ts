@@ -36,7 +36,7 @@ export default async (server: http.Server) => {
   });
 
   io.on('connection', (socket) => {
-    socket.on('subscribe', (roomId: string) => {
+    socket.on('subscribe', (roomId: string) => {console.log("Attemp to subscibe",roomId)
       const { userId } = socket.data;
       const hasAccessToRoom = socketHelper.checkAccessToRoom(roomId, { userId });
 
