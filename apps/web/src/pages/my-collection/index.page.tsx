@@ -145,24 +145,24 @@ const MyCollection: NextPage = () => {
               <div style={{ marginLeft: ' auto' }}>
                 <Menu>
                   <Menu.Target>
-                      <Button
-                          size="sm"
-                          variant="default"
-                          leftIcon={<IconSettings />}
-                        >
-                                          Settings
-                        </Button>
-                    </Menu.Target>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      leftIcon={<IconSettings />}
+                    >
+                      Settings
+                    </Button>
+                  </Menu.Target>
                   <Menu.Dropdown p={10}>
-                      <Menu.Item
-                          color="red"
-                          icon={<IconTrash size={14} />}
-                          closeMenuOnClick={false}
-                          onClick={openConfirmDeletePictureModal}
-                        >
-                                          Delete
-                        </Menu.Item>
-                    </Menu.Dropdown>
+                    <Menu.Item
+                      color="red"
+                      icon={<IconTrash size={14} />}
+                      closeMenuOnClick={false}
+                      onClick={openConfirmDeletePictureModal}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
                 </Menu>
               </div>
               <TextInput
