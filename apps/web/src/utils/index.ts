@@ -5,5 +5,5 @@ import * as uiUtil from './ui.util';
 export {
   handleError,
   typesUtil,
-  uiUtil
+  uiUtil,
 };

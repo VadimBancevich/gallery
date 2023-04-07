@@ -101,7 +101,7 @@ const SignIn: NextPage = () => {
               Sign up
             </Link>
           </Group>
-          <Group position='center'>
+          <Group position="center">
             <Link
               type="router"
               href={RoutePath.Home}

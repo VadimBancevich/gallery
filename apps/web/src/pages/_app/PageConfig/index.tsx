@@ -42,9 +42,9 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
 
   useLayoutEffect(() => {
     if (route === RoutePath.SignIn) {
-      replace(RoutePath.Home)
+      replace(RoutePath.Home);
     }
-  }, [account])
+  }, [account]);
 
   if (isAccountLoading) return null;
 

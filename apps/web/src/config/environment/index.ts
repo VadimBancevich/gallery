@@ -8,9 +8,9 @@ const base = {
   env,
   port: process.env.PORT || 3002,
   isDev: env === 'development' || env === 'development-docker',
-  apiUrl: '',
-  wsUrl: '',
-  webUrl: '',
+  apiUrl: process.env.API_URL,
+  wsUrl: process.env.API_URL,
+  webUrl: process.env.API_URL,
   mixpanel: {
     apiKey: process.env.NEXT_PUBLIC_MIXPANEL_API_KEY || '',
   },

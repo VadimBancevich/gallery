@@ -36,8 +36,8 @@ const Header: FC = () => {
           <LogoImage />
         </Link>
         <Group>
-          <Link type='router' href={RoutePath.MyCollection}>My Collection</Link>
-          {account ?<UserMenu /> : <Link type='router' href={RoutePath.SignIn}>Sign In</Link>}
+          <Link type="router" href={RoutePath.MyCollection}>My Collection</Link>
+          {account ? <UserMenu /> : <Link type="router" href={RoutePath.SignIn}>Sign In</Link>}
         </Group>
       </Container>
     </LayoutHeader>
