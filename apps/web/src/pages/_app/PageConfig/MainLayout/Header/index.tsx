@@ -3,7 +3,6 @@ import { RoutePath } from 'routes';
 import {
   Header as LayoutHeader,
   Container,
-  Stack,
   Group,
 } from '@mantine/core';
 import { Link } from 'components';
@@ -17,21 +16,9 @@ import ShadowLoginBanner from './components/ShadowLoginBanner';
 const Header: FC = () => {
   const { data: account } = accountApi.useGet();
 
-  // if (!account) return null;
-
-  if (!account) {
-    return (
-      <LayoutHeader height="72px">
-        <Stack>
-          <Link href={RoutePath.SignIn}>Sign in</Link>
-        </Stack>
-      </LayoutHeader>
-    )
-  }
-
   return (
     <LayoutHeader height="72px">
-      {account.isShadow && <ShadowLoginBanner email={account.email} />}
+      {account?.isShadow && <ShadowLoginBanner email={account.email} />}
       <Container
         sx={(theme) => ({
           minHeight: '72px',
@@ -50,7 +37,7 @@ const Header: FC = () => {
         </Link>
         <Group>
           <Link type='router' href={RoutePath.MyCollection}>My Collection</Link>
-          <UserMenu />
+          {account ?<UserMenu /> : <Link type='router' href={RoutePath.SignIn}>Sign In</Link>}
         </Group>
       </Container>
     </LayoutHeader>

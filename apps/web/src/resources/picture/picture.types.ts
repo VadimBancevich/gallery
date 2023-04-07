@@ -10,5 +10,6 @@ export interface Picture {
     name?: string;
     description?: string;
     imageUrl: string;
-    visibility: PictureVisibility
+    visibility: PictureVisibility,
+    likesCount: number
 }

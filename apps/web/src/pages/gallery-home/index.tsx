@@ -1,88 +1,94 @@
-import { useEffect, useRef, FC, useState, useCallback, useLayoutEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { NextPage } from 'next';
 
-import { Button, Card, Container, Flex, Group, Image, Loader, Modal, Stack, Text } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { Button, Center, Flex, Group, Image, Loader, Modal, Select, Stack, Text } from '@mantine/core';
+import { useDisclosure, useMediaQuery, useWindowScroll } from '@mantine/hooks';
 
 import { PicturesGrid } from 'components';
 
 import { RoutePath } from 'routes';
 
 import { pictureApi, pictureTypes } from 'resources/picture';
+import { useRouter } from 'next/router';
 
-const PictureItem: FC<{
-    picture: pictureTypes.Picture,
-    onClick?: (picture: pictureTypes.Picture) => void,
-    allowClickIfError?: boolean,
-    onPictureLoaded?: () => void
-}> = ({
-    picture,
-    onClick,
-    allowClickIfError,
-    onPictureLoaded
-}) => {
-
-        const [isErr, setIsErr] = useState(false);
-
-        if (isErr) {
-            return null;
-        }
-
-        return (
-            <Card
-                p={2}
-                style={{ width: '200px', cursor: isErr ? undefined : 'pointer' }}
-                onClick={() => (allowClickIfError || !isErr) && onClick?.(picture)}
-            >
-                <Image
-                    src={picture.imageUrl}
-                    onError={() => {
-                        console.warn(`Failed load image '${picture.imageUrl}'`)
-                        setIsErr(true);
-                    }}
-                    onLoad={onPictureLoaded}
-                    withPlaceholder={isErr}
-                    imageProps={isErr ? { style: { height: '150px' } } : undefined}
-                />
-            </Card>
-        );
-    };
+interface SearchParams {
+    perPage?: number,
+    sort?: 'NEWEST' | 'OLDEST' | 'MOST_LIKED'
+}
 
 const GalleryHome: NextPage = () => {
 
-    const { data, isLoading } = pictureApi.useSearch({});
     const [opened, { open, close }] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width:450px)')
     const [modalPicture, setModalPicture] = useState<pictureTypes.Picture>()
-    const ref = useRef<HTMLDivElement>(null);
+    const { route, replace, query } = useRouter()
+    const [params, setParams] = useState<SearchParams>({ perPage: 20 })
+    const { data, isLoading, isFetching, fetchNextPage, hasNextPage } = pictureApi.useInfiniteSearch(params);
+
+    const pictures = useMemo(() => {
+        return data?.pages.flatMap(page => page.items) || []
+    }, [data])
+
+    useEffect(() => {
+        setParams({ ...params, ...query })
+    }, [query])
+
+    const [scroll] = useWindowScroll();
+
+    useEffect(() => {
+        if (!isFetching && !isLoading && hasNextPage && document.scrollingElement?.scrollHeight && document.scrollingElement.scrollHeight - (window.innerHeight + document.documentElement.scrollTop) < 10) {
+            fetchNextPage();
+        }
+    }, [scroll.y])
 
     const handlePictureCardClick = (picture: pictureTypes.Picture) => {
         setModalPicture(picture);
         open();
     };
 
+    const handleSortChange = (value: string | null) => {
+        if (value) {
+            replace({
+                pathname: route,
+                query: { ...query, sort: value }
+            })
+        }
+    }
     return (
         <>
             <Head>
                 <title>Gallery</title>
             </Head>
             <Stack>
-                <Stack align='end'>
-                    <Link href={RoutePath.UploadPicture}>
-                        <Button size='md'>Publish picture</Button>
-                    </Link>
-                </Stack>
+                <Group style={{ justifyContent: 'space-between' }}>
+                    <Select
+                        data={[
+                            { value: "NEWEST", label: "Newest" },
+                            { value: "OLDEST", label: "Oldest", },
+                            { value: "MOST_LIKED", label: "Most Liked" }
+                        ]}
+                        size='md'
+                        onChange={handleSortChange}
+                        value={query.sort as string || "NEWEST"}
+                        variant='unstyled'
+                    >
 
+                    </Select>
+                    <Link href={RoutePath.UploadPicture}>
+                        <Button size='md'>Upload picture</Button>
+                    </Link>
+                </Group>
                 <PicturesGrid
-                    pictures={data?.items}
+                    pictures={pictures}
                     itemProps={{
                         nullIfError: true,
                         onClick: handlePictureCardClick
                     }}
                 />
+                {isFetching && <Center> <Loader /></Center>}
             </Stack>
             <Modal
                 opened={opened}
@@ -90,28 +96,28 @@ const GalleryHome: NextPage = () => {
                 centered
                 padding={2}
                 title={modalPicture?.name || 'Picture'}
-                size={'100%'}
+                size={'auto'}
             >
                 <Flex
                     direction={isMobile ? 'column' : 'row'}
-                    align={'center'}
                 >
                     <div>
                         <Image
                             fit='contain'
-                            width={"auto"}
+                            width={'100%'}
                             imageProps={{
                                 style: {
                                     maxHeight: "80vh",
-                                    maxWidth: "80vw"
+                                    maxWidth: "100%"
                                 }
                             }}
                             src={modalPicture?.imageUrl}
                         />
                     </div>
-                    <Container style={{ width: "300px" }}>
-                        <Text>{modalPicture?._id}</Text>
-                    </Container>
+                    {(modalPicture?.name || modalPicture?.description) && <Stack style={{ width: isMobile ? '100%' : '200px' }} p={10}>
+                        <Text fw={'bold'} size={'lg'}>{modalPicture?.name}</Text>
+                        <Text italic size={'md'}>{modalPicture?.description}</Text>
+                    </Stack>}
                 </Flex>
             </Modal>
         </>

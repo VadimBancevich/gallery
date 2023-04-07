@@ -1,15 +1,17 @@
 import { z } from 'zod';
-import { Card, Center, Container, Flex, Image, Loader, Modal, Pagination, Stack, Text, TextInput, Radio, Textarea, rem, Button, Group, Switch, Input, Menu, ActionIcon, Popover } from "@mantine/core";
+import { Flex, Image, Loader, Modal, Stack, Text, TextInput, Radio, Textarea, Button, Group, Menu } from "@mantine/core";
 import { notifications } from '@mantine/notifications';
-import { IconPhotoExclamation, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconPlus, IconSettings, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { pictureApi, pictureTypes } from "resources/picture";
 import { PicturesGrid } from 'components';
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery, useScrollLock, useWindowScroll } from "@mantine/hooks";
 import { useForm } from 'react-hook-form';
-import { modals, openConfirmModal } from '@mantine/modals';
+import { modals } from '@mantine/modals';
+import Link from 'next/link';
+import { RoutePath } from 'routes';
 
 const schema = z.object({
     _id: z.string(),
@@ -22,14 +24,25 @@ type UpdateParams = z.infer<typeof schema>;
 
 const MyCollection: NextPage = () => {
 
-    const { data, isLoading, refetch: refetchPictures } = pictureApi.useGetMyPictures();
+    const [params, setParams] = useState();
+
+    const { data, isLoading, isFetching, fetchNextPage, hasNextPage } = pictureApi.useGetMyPicturesInfinity(params);
     const { mutate: updatePicture, isLoading: isPictureUpdating } = pictureApi.useUpdatePicture()
     const { mutate: deletePicture, isLoading: isPictureDeleting } = pictureApi.useDeletePicture();
+    const [scroll] = useWindowScroll();
+
+    const pictures = useMemo(() => data?.pages.flatMap(page => page.items) || [], [data]);
 
     const [opened, { open, close }] = useDisclosure(false);
     const [modalPicture, setModalPicture] = useState<pictureTypes.Picture>();
     const isMobile = useMediaQuery('(max-width:450px)');
     const { register, reset, handleSubmit, setValue } = useForm<UpdateParams>();
+    
+    useEffect(() => {
+        if (!isFetching && !isLoading && hasNextPage && document.scrollingElement?.scrollHeight && document.scrollingElement.scrollHeight - (window.innerHeight + document.documentElement.scrollTop) < 10) {
+            fetchNextPage();
+        }
+    }, [scroll.y])
 
     const openConfirmDeletePictureModal = () => {
         modals.openConfirmModal({
@@ -46,7 +59,6 @@ const MyCollection: NextPage = () => {
                     deletePicture(modalPicture._id, {
                         onSuccess: () => {
                             close();
-                            refetchPictures();
                             setModalPicture(undefined);
                             notifications.show({
                                 message: "Picture has been deleted !"
@@ -77,7 +89,6 @@ const MyCollection: NextPage = () => {
         console.log(params)
         updatePicture(params, {
             onSuccess: () => {
-                refetchPictures();
                 notifications.show({ message: "Picture Saved", color: 'green' })
             }
         });
@@ -88,9 +99,20 @@ const MyCollection: NextPage = () => {
             <Head>
                 <title>My Collection</title>
             </Head>
-            {!isLoading && !data?.items.length && <div>Your collection is empty</div>}
+            <Group position='right' mb={12}>
+                <Link type='route' href={RoutePath.UploadPicture}>
+                    <Button
+                        leftIcon={<IconPlus />}
+                        color='green'
+                        size='md'
+                    >
+                        Upload picture
+                    </Button>
+                </Link>
+            </Group>
+            {!isFetching && !pictures.length && <div>Your collection is empty</div>}
             <PicturesGrid
-                pictures={data?.items}
+                pictures={pictures}
                 itemProps={{
                     onClick: handlePictureClick,
                     allowClickIfError: true

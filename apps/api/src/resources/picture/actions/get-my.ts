@@ -6,8 +6,8 @@ import { validateMiddleware } from 'middlewares';
 import { pictureService } from 'resources/picture';
 
 const schema = z.object({
-    page: z.number().optional().default(1),
-    perPage: z.number().optional().default(30),
+    page: z.string().optional().default('1').transform(Number),
+    perPage: z.string().optional().default('30').transform(Number),
     sort: z.object({
         createdOn: z.string()
     }).default({ createdOn: 'desc' })

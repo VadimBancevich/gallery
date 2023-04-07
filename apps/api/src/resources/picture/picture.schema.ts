@@ -9,6 +9,7 @@ const schema = z.object({
     imageUrl: z.string(),
     name: z.string().max(100).optional(),
     description: z.string().max(500).optional(),
+    likesCount: z.number().min(0).default(0),
     visibility: z.nativeEnum(PictureVisibility).default(PictureVisibility.PRIVATE)
 });
 

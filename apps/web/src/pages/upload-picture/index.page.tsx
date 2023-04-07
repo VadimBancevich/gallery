@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
-import { Button, Center, Container, Flex, Grid, Group, Image, Space, Stack, Text, rem } from '@mantine/core';
+import { Button, Container, Flex, Group, Image, Stack, Text, rem } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
 
@@ -14,7 +14,7 @@ import { pictureApi } from 'resources/picture'
 
 const PublishPicture: NextPage = () => {
 
-    const { replace, push, } = useRouter()
+    const { replace } = useRouter()
 
     const [file, setFile] = useState<FileWithPath>()
     const [fileSrc, setFileSrc] = useState<string>()
@@ -39,12 +39,11 @@ const PublishPicture: NextPage = () => {
 
     const handleSave = () => {
         if (file) {
-            console.log("")
             const fd = new FormData();
             fd.set('file', file)
             uploadPicture(fd, {
                 onSuccess: (data) => {
-                    replace(`${RoutePath.Picture}?id=${data._id}`);
+                    replace(`${RoutePath.MyCollection}`);
                 },
                 onError: (e) => handleError(e)
             })

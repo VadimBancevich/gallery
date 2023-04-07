@@ -1,7 +1,9 @@
-import React, { FC, useState, SyntheticEvent, useEffect, useLayoutEffect } from 'react';
-import { Card, Image } from '@mantine/core';
+import React, { FC, useState, SyntheticEvent, useLayoutEffect } from 'react';
+import { ActionIcon, Card, Group, Image, Text } from '@mantine/core';
 
 import { pictureTypes } from 'resources/picture';
+import { IconThumbUp, IconThumbUpFilled } from '@tabler/icons-react';
+import { likeApi } from 'resources/picture-like';
 
 export interface PictureCardProps {
     picture: pictureTypes.Picture,
@@ -22,6 +24,9 @@ const PictureCard: FC<PictureCardProps> = ({
 }) => {
 
     const [loadErr, setLoadErr] = useState<{ event: SyntheticEvent<HTMLDivElement, Event> }>();
+    const { data: myLikes, isFetching } = likeApi.useGetMyLikes([picture._id])
+    const { mutate: like, isLoading: isLikeLoading } = likeApi.useLikePicture();
+    const { mutate: removeLike, isLoading: isRemoveLikeLoading } = likeApi.useRemoveLike();
 
     useLayoutEffect(() => {
         loadErr && onError?.(picture, loadErr.event);
@@ -29,6 +34,18 @@ const PictureCard: FC<PictureCardProps> = ({
 
     if (nullIfError && loadErr) {
         return null;
+    }
+
+    const isLiked = Boolean(myLikes?.[picture._id])
+
+    const handleLikeClick = () => {
+        if (!isFetching && !isLikeLoading && !isRemoveLikeLoading) {
+            if (isLiked) {
+                removeLike(picture._id);
+            } else {
+                like(picture._id);
+            }
+        }
     }
 
     return (
@@ -47,6 +64,12 @@ const PictureCard: FC<PictureCardProps> = ({
                 withPlaceholder={true}
                 imageProps={loadErr ? { style: { height: '150px' } } : undefined}
             />
+            <Group position='right' p={2}>
+                <Text>{picture.likesCount}</Text>
+                <ActionIcon onClick={e => { e.stopPropagation() }}>
+                    {isLiked ? <IconThumbUpFilled onClick={handleLikeClick} /> : <IconThumbUp onClick={handleLikeClick} />}
+                </ActionIcon>
+            </Group>
         </Card>
     );
 };
