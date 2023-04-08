@@ -8,12 +8,17 @@ const base = {
   env,
   port: process.env.PORT || 3002,
   isDev: env === 'development' || env === 'development-docker',
-  apiUrl: process.env.API_URL,
-  wsUrl: process.env.API_URL,
-  webUrl: process.env.API_URL,
+  apiUrl: '',
+  wsUrl: '',
+  webUrl: '',
   mixpanel: {
     apiKey: process.env.NEXT_PUBLIC_MIXPANEL_API_KEY || '',
   },
 };
 
-export default merge(base, config);
+export default merge(base, {
+  ...config,
+  apiUrl: process.env.API_URL || config.apiUrl,
+  wsUrl: process.env.API_URL || config.wsUrl,
+  webUrl: process.env.API_URL || config.webUrl
+});
