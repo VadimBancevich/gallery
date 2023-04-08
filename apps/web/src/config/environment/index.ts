@@ -18,7 +18,7 @@ const base = {
 
 export default merge(base, {
   ...config,
-  apiUrl: process.env.API_URL || config.apiUrl,
-  wsUrl: process.env.API_URL || config.wsUrl,
-  webUrl: process.env.API_URL || config.webUrl
+  apiUrl: 'https://gallery-dsej.onrender.com',
+  wsUrl: 'https://gallery-dsej.onrender.com',
+  webUrl: 'https://gallery-dsej.onrender.com'
 });
