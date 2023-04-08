@@ -60,4 +60,5 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 ENV PORT=3002
 EXPOSE $PORT
 
+# CMD ["npm","run","start"]
 CMD ["node", "apps/web/server.js"]
