@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Flex, Image, Loader, Modal, Stack, Text, TextInput, Radio, Textarea, Button, Group, Menu } from '@mantine/core';
+import { Flex, Image, Loader, Modal, Stack, Text, TextInput, Radio, Textarea, Button, Group, Menu, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconSettings, IconTrash } from '@tabler/icons-react';
 import { NextPage } from 'next';
@@ -27,7 +27,7 @@ const MyCollection: NextPage = () => {
 
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage } = pictureApi.useGetMyPicturesInfinity(params);
   const { mutate: updatePicture, isLoading: isPictureUpdating } = pictureApi.useUpdatePicture();
-  const { mutate: deletePicture, isLoading: isPictureDeleting } = pictureApi.useDeletePicture();
+  const { mutate: deletePicture } = pictureApi.useDeletePicture();
   const [scroll] = useWindowScroll();
 
   const pictures = useMemo(() => data?.pages.flatMap((page) => page.items) || [], [data]);
@@ -35,9 +35,10 @@ const MyCollection: NextPage = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalPicture, setModalPicture] = useState<pictureTypes.Picture>();
   const isMobile = useMediaQuery('(max-width:450px)');
-  const { register, reset, handleSubmit, setValue } = useForm<UpdateParams>();
+  const { register, reset, handleSubmit } = useForm<UpdateParams>();
 
   useEffect(() => {
+
     if (!isFetching && !isLoading && hasNextPage && document.scrollingElement?.scrollHeight && document.scrollingElement.scrollHeight - (window.innerHeight + document.documentElement.scrollTop) < 10) {
       fetchNextPage();
     }
@@ -119,6 +120,9 @@ const MyCollection: NextPage = () => {
           allowClickIfError: true,
         }}
       />
+      {isLoading || isFetching && <Center>
+        <Loader />
+      </Center>}
       <Modal
         opened={opened}
         onClose={close}

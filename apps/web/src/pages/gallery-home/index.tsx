@@ -37,7 +37,9 @@ const GalleryHome: NextPage = () => {
 
   useEffect(() => {
     if (!isFetching && !isLoading && hasNextPage && document.scrollingElement?.scrollHeight && document.scrollingElement.scrollHeight - (window.innerHeight + document.documentElement.scrollTop) < 10) {
+      console.log("Fetch page")
       fetchNextPage();
+
     }
   }, [scroll.y]);
 

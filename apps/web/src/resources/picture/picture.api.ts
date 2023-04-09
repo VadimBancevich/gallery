@@ -57,7 +57,7 @@ export function useGetMyPicturesInfinity<T>(params?: T) {
 
   return useInfiniteQuery<PicturesPage>(['my-pictures', 'pictures-infinite', params], search, {
     getNextPageParam: (last, all) => {
-      if (last.totalPages < all.length) {
+      if (all.length < last.items.length) {
         return all.length + 1;
       }
     },
