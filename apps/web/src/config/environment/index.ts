@@ -16,4 +16,9 @@ const base = {
   },
 };
 
-export default merge(base, config);
+export default merge(base, {
+  ...config,
+  apiUrl: "https://gallery-dsej.onrender.com",
+  wsUrl: "https://gallery-dsej.onrender.com",
+  webUrl: "https://gallery-dsej.onrender.com"
+});
