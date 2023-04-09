@@ -23,7 +23,7 @@ import ioEmitter from 'io-emitter';
 import { AppKoa } from 'types';
 
 const initKoa = () => {
-  const app = new AppKoa();
+  const app = new AppKoa({ proxy: true });
 
   app.use(cors({ credentials: true }));
   app.use(helmet());
