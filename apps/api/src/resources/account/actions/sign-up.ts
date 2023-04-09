@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import config from 'config';
 import { securityUtil } from 'utils';
-import { analyticsService, emailService } from 'services';
+import { analyticsService, emailService, authService } from 'services';
 import { validateMiddleware } from 'middlewares';
 import { AppKoaContext, Next, AppRouter } from 'types';
 import { userService, User } from 'resources/user';
@@ -60,7 +60,9 @@ async function handler(ctx: AppKoaContext<ValidatedData>) {
     lastName,
   });
 
-  await emailService.sendVerifyEmail(user.email, {
+  await authService.setTokens(ctx, user._id)
+
+  emailService.sendVerifyEmail(user.email, {
     verifyEmailUrl: `${config.apiUrl}/account/verify-email?token=${signupToken}`,
   });
 
