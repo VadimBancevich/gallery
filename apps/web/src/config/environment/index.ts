@@ -1,6 +1,6 @@
 import merge from 'lodash/merge';
 
-const env = process.env.NEXT_PUBLIC_APP_ENV || 'development';
+const env = process.env.APP_ENV || 'development';
 // eslint-disable-next-line import/no-dynamic-require
 const config = require(`./${env}.json`);
 
