@@ -21,8 +21,7 @@ export const setTokenCookies = ({
     httpOnly: true,
     domain: cookiesDomain,
     expires: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years,
-    sameSite: 'none',
-    secure: true
+    sameSite: 'none'
   });
 };
 
