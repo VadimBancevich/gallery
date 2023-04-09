@@ -46,9 +46,9 @@ FROM node:alpine AS runner
 WORKDIR /app
 
 # # Don't run production as root
-RUN addgroup --system --gid 1001 app
-RUN adduser --system --uid 1001 app
-USER app
+# RUN addgroup --system --gid 1001 app
+# RUN adduser --system --uid 1001 app
+# USER app
 COPY --from=installer /app .
 
 EXPOSE 3001
