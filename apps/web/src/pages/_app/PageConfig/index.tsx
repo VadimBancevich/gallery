@@ -37,7 +37,7 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
       analyticsService.init();
 
       analyticsService.setUser(account);
-    }
+    },
   });
 
   const { scope, layout } = routesConfiguration[route as RoutePath] || {};
@@ -47,10 +47,10 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
 
   if (isAccountLoading && (scope === ScopeType.PRIVATE || scope === ScopeType.PUBLIC_ONLY)) {
     return null;
-  } else if (account && scope === ScopeType.PUBLIC_ONLY) {
+  } if (account && scope === ScopeType.PUBLIC_ONLY) {
     replace(RoutePath.Home);
   } else if (!account && scope === ScopeType.PRIVATE) {
-    replace(RoutePath.SignIn)
+    replace(RoutePath.SignIn);
     return null;
   }
 

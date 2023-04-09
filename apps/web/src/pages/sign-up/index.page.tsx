@@ -138,7 +138,7 @@ const SignUp: NextPage = () => {
             </div>
           )}
           <Center>
-            <Link type='router' href={RoutePath.Home}>
+            <Link type="router" href={RoutePath.Home}>
               Home
             </Link>
           </Center>
