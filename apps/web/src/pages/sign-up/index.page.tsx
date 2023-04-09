@@ -15,6 +15,8 @@ import {
   Checkbox,
   SimpleGrid,
   Tooltip,
+  Container,
+  Center,
 } from '@mantine/core';
 
 import { GoogleIcon } from 'public/icons';
@@ -135,6 +137,11 @@ const SignUp: NextPage = () => {
               </Link>
             </div>
           )}
+          <Center>
+            <Link type='router' href={RoutePath.Home}>
+              Home
+            </Link>
+          </Center>
         </Stack>
       </>
     );
