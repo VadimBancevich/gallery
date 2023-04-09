@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactElement, useEffect } from 'react';
+import { FC, Fragment, ReactElement } from 'react';
 import { useRouter } from 'next/router';
 
 import { routesConfiguration, ScopeType, LayoutType, RoutePath } from 'routes';
@@ -13,7 +13,6 @@ import environmentConfig from 'config';
 import MainLayout from './MainLayout';
 import UnauthorizedLayout from './UnauthorizedLayout';
 import PrivateScope from './PrivateScope';
-import { Center, Loader } from '@mantine/core';
 
 const layoutToComponent = {
   [LayoutType.MAIN]: MainLayout,
@@ -41,26 +40,18 @@ const PageConfig: FC<PageConfigProps> = ({ children }) => {
     }
   });
 
-  useEffect(() => {
-    if (account && !isAccountLoading && (route === RoutePath.SignIn || route === RoutePath.SignUp)) {
-      replace(RoutePath.Home);
-    }
-  }, [account]);
-
   const { scope, layout } = routesConfiguration[route as RoutePath] || {};
 
   const Scope = account ? PrivateScope : Fragment;
   const Layout = layout ? layoutToComponent[layout] : Fragment;
 
-  if (scope === ScopeType.PRIVATE) {
-    if (isAccountLoading) {
-      return <Center style={{ height: '100vh' }}>
-        <Loader />
-      </Center>
-    } else if (!account) {
-      replace(RoutePath.SignIn);
-      return null;
-    }
+  if (isAccountLoading && (scope === ScopeType.PRIVATE || scope === ScopeType.PUBLIC_ONLY)) {
+    return null;
+  } else if (account && scope === ScopeType.PUBLIC_ONLY) {
+    replace(RoutePath.Home);
+  } else if (!account && scope === ScopeType.PRIVATE) {
+    replace(RoutePath.SignIn)
+    return null;
   }
 
   return (

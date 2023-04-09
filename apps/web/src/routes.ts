@@ -1,5 +1,6 @@
 export enum ScopeType {
   PUBLIC = 'PUBLIC',
+  PUBLIC_ONLY = 'PUBLIC_ONLY',
   PRIVATE = 'PRIVATE',
 }
 
@@ -67,23 +68,23 @@ export const routesConfiguration: RoutesConfiguration = {
 
   // Auth routes
   [RoutePath.SignIn]: {
-    scope: ScopeType.PUBLIC,
+    scope: ScopeType.PUBLIC_ONLY,
     layout: LayoutType.UNAUTHORIZED,
   },
   [RoutePath.SignUp]: {
-    scope: ScopeType.PUBLIC,
+    scope: ScopeType.PUBLIC_ONLY,
     layout: LayoutType.UNAUTHORIZED,
   },
   [RoutePath.ForgotPassword]: {
-    scope: ScopeType.PUBLIC,
+    scope: ScopeType.PUBLIC_ONLY,
     layout: LayoutType.UNAUTHORIZED,
   },
   [RoutePath.ResetPassword]: {
-    scope: ScopeType.PUBLIC,
+    scope: ScopeType.PUBLIC_ONLY,
     layout: LayoutType.UNAUTHORIZED,
   },
   [RoutePath.ExpireToken]: {
-    scope: ScopeType.PUBLIC,
+    scope: ScopeType.PUBLIC_ONLY,
     layout: LayoutType.UNAUTHORIZED,
   },
 
